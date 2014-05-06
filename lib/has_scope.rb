@@ -95,18 +95,25 @@ module HasScope
 
   protected
 
-  # Receives an object where scopes will be applied to.
+  # Receives an object where scopes will be applied to, and apply each matching scope.
   #
   #   class GraduationsController < InheritedResources::Base
   #     has_scope :featured, :type => true, :only => :index
   #     has_scope :by_degree, :only => :index
   #
   #     def index
-  #       @graduations = apply_scopes(Graduation).all
+  #       @graduations = apply_scopes(Graduation)
   #     end
   #   end
   #
+  # Consistently returns a relation, even when a class is given, so that it is
+  # be possible to chain and call methods like #each on the returned value.
   def apply_scopes(target, hash=params)
+    # TODO: Cleanup and get rid of version check when dropping support to Rails 3.2.
+    if target.is_a?(Class) && target.respond_to?(:all)
+      target = ActiveSupport::VERSION::MAJOR == 3 ? target.scoped : target.all
+    end
+
     scopes_configuration.each do |scope, options|
       next unless apply_scope_to_action?(options)
       key = options[:as]
