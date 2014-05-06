@@ -102,7 +102,7 @@ module HasScope
   #     has_scope :by_degree, :only => :index
   #
   #     def index
-  #       @graduations = apply_scopes(Graduation).all
+  #       @graduations = apply_scopes(Graduation.all)
   #     end
   #   end
   #

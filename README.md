@@ -33,7 +33,7 @@ class GraduationsController < ApplicationController
   has_scope :by_period, :using => [:started_at, :ended_at], :type => :hash
 
   def index
-    @graduations = apply_scopes(Graduation).all
+    @graduations = apply_scopes(Graduation.all) # or Graduation.scoped in Rails 3.2
   end
 end
 ```
